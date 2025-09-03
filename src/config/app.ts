@@ -9,6 +9,10 @@ export interface AppConfig {
   readonly apiVersion: string;
   readonly corsOrigin: string;
   readonly maxRequestSize: string;
+  readonly redis: {
+    readonly host: string;
+    readonly port: number;
+  };
 }
 
 /**
@@ -21,6 +25,10 @@ export const getAppConfig = (): AppConfig => {
     apiVersion: process.env.API_VERSION || "v1",
     corsOrigin: process.env.CORS_ORIGIN || "*",
     maxRequestSize: process.env.MAX_REQUEST_SIZE || "10mb",
+    redis: {
+      host: process.env.REDIS_HOST || "localhost",
+      port: parseInt(process.env.REDIS_PORT || "6379", 10),
+    },
   };
 };
 
