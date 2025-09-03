@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { getAppConfig, isDevelopment } from "./config";
+import appRoutes from "./routes";
+import { notFound, errorHandler, responseWrapper } from "./errors";
 
 // Load environment variables
 dotenv.config();
@@ -18,24 +20,15 @@ app.use(
 );
 app.use(express.json({ limit: config.maxRequestSize }));
 
-// Basic route
-app.get("/", (req, res) => {
-  res.json({
-    message: "Rate Limiting Scraper API",
-    version: config.apiVersion,
-    status: "running",
-    environment: config.nodeEnv,
-  });
-});
+// Response wrapper middleware (must be before routes)
+app.use(responseWrapper);
 
-// Health check route
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+// API routes
+app.use("/api", appRoutes);
+
+// Error handling middleware (must be last)
+app.use(notFound);
+app.use(errorHandler);
 
 // Start server
 app.listen(config.port, () => {
