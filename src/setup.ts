@@ -1,5 +1,5 @@
 import { getAppConfig, isDevelopment } from "./config";
-import { redisService } from "./services";
+import { redisService, proxyService } from "./services";
 import app from "./app";
 
 /**
@@ -33,6 +33,10 @@ export const startServer = async (): Promise<void> => {
     // Connect to Redis
     await redisService.connect();
     console.log("Redis connected successfully");
+
+    // Initialize ProxyService after Redis connection
+    await proxyService.initialize(); // TODO: how to refresh it
+    console.log("ProxyService initialized successfully");
 
     const config = getAppConfig();
 

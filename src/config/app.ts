@@ -13,6 +13,11 @@ export interface AppConfig {
     readonly host: string;
     readonly port: number;
   };
+  readonly scraping: {
+    readonly timeout: number;
+    readonly requestsPerSecond: number;
+    readonly proxyTimeout: number;
+  };
 }
 
 /**
@@ -28,6 +33,11 @@ export const getAppConfig = (): AppConfig => {
     redis: {
       host: process.env.REDIS_HOST || "localhost",
       port: parseInt(process.env.REDIS_PORT || "6379", 10),
+    },
+    scraping: {
+      timeout: parseInt(process.env.SCRAPE_TIMEOUT_MS || "30000", 10),
+      requestsPerSecond: parseInt(process.env.RATE_LIMIT_PER_SECOND || "1", 10),
+      proxyTimeout: parseInt(process.env.PROXY_TIMEOUT_MS || "10000", 10),
     },
   };
 };

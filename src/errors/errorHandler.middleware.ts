@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { isDevelopment } from "../config";
+import { AppError } from "./custom-errors";
 
 /**
  * Global error handling middleware
@@ -13,6 +14,21 @@ export const errorHandler = (
 ): void => {
   console.error("Unhandled error:", error);
 
+  // Check if it's our custom AppError
+  if (error instanceof AppError) {
+    const response = {
+      status: "error",
+      data: null,
+      message: error.message,
+      timestamp: new Date().toISOString(),
+      ...(isDevelopment() && { stack: error.stack }),
+    };
+
+    res.status(error.statusCode).json(response);
+    return;
+  }
+
+  // Handle generic errors
   const response = {
     status: "error",
     data: null,
