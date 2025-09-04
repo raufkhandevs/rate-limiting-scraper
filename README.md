@@ -108,6 +108,29 @@ src/
 └── errors/          # Error handling
 ```
 
+## Testing
+
+```bash
+# Run tests locally
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in Docker
+npm run test:docker
+
+# Run tests with coverage in Docker
+npm run test:docker:coverage
+```
+
+**Test Structure:**
+
+- `tests/` - Test files (separate from production code)
+- Unit tests for services, utilities, and core logic
+- Jest + TypeScript configuration
+- Redis mocking for isolated testing
+
 ## Docker Commands
 
 ```bash
