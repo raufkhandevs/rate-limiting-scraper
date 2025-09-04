@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncWrapper } from "../errors/asyncWrapper";
+import { asyncWrapper } from "../middlewares";
 import { scrapeUrl } from "../controllers/scrape.controller";
 
 const router = Router();

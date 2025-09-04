@@ -14,7 +14,6 @@ class ProxyProviderFactory implements IProxyProviderFactory {
   private providers: Map<ProxyProviderType, IProxyProvider> = new Map();
 
   constructor() {
-    // Initialize only the free provider
     this.initializeProviders();
   }
 
@@ -36,10 +35,8 @@ class ProxyProviderFactory implements IProxyProviderFactory {
    * Currently only initializes the free provider
    */
   private initializeProviders(): void {
-    // Import free provider
     const { FreeProxyProvider } = require("./free-proxy-provider");
 
-    // Only add the free provider
     this.providers.set("free", new FreeProxyProvider());
 
     // TODO: Add premium and rotating providers in the future
@@ -48,6 +45,5 @@ class ProxyProviderFactory implements IProxyProviderFactory {
   }
 }
 
-// Export singleton instance
 export const proxyProviderFactory = new ProxyProviderFactory();
 export default proxyProviderFactory;

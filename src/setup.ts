@@ -1,4 +1,4 @@
-import { getAppConfig, isDevelopment } from "./config";
+import { getAppConfig } from "./config";
 import { redisService, proxyService } from "./services";
 import app from "./app";
 
@@ -30,23 +30,16 @@ const setupGracefulShutdown = (server: any): void => {
  */
 export const startServer = async (): Promise<void> => {
   try {
-    // Connect to Redis
     await redisService.connect();
     console.log("Redis connected successfully");
 
-    // Initialize ProxyService after Redis connection
-    await proxyService.initialize(); // TODO: how to refresh it
+    await proxyService.initialize();
     console.log("ProxyService initialized successfully");
 
     const config = getAppConfig();
 
     const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);
-      console.log(`Environment: ${config.nodeEnv}`);
-      console.log(`API Version: ${config.apiVersion}`);
-      if (isDevelopment()) {
-        console.log(`CORS Origin: ${config.corsOrigin}`);
-      }
     });
 
     setupGracefulShutdown(server);
@@ -56,7 +49,6 @@ export const startServer = async (): Promise<void> => {
   }
 };
 
-// Start the server if this file is run directly
 if (require.main === module) {
   startServer();
 }

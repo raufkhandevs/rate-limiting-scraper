@@ -3,9 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { getAppConfig } from "./config";
 import appRoutes from "./routes";
-import { notFound, errorHandler, responseWrapper } from "./errors";
+import { notFound, errorHandler, responseWrapper } from "./middlewares";
 
-// Load environment variables
 dotenv.config();
 
 /**
@@ -15,7 +14,6 @@ const createApp = (): express.Application => {
   const app = express();
   const config = getAppConfig();
 
-  // Basic middleware
   app.use(
     cors({
       origin: config.corsOrigin,
@@ -24,13 +22,10 @@ const createApp = (): express.Application => {
   );
   app.use(express.json({ limit: config.maxRequestSize }));
 
-  // Response wrapper middleware (must be before routes)
   app.use(responseWrapper);
 
-  // API routes
   app.use("/api", appRoutes);
 
-  // Error handling middleware (must be last)
   app.use(notFound);
   app.use(errorHandler);
 

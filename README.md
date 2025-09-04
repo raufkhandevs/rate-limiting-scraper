@@ -95,4 +95,3 @@ npm run docker:logs   # View logs
 - **Redis** for caching and rate limiting
 - **Axios** for HTTP requests
 - **Docker** for containerization
-- **Lodash** for utilities

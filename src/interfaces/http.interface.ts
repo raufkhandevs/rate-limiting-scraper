@@ -1,6 +1,3 @@
-/**
- * HTTP related interfaces
- */
 import { IProxy } from "./proxy.interface";
 
 /**

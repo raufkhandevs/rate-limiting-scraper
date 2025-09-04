@@ -22,7 +22,6 @@ export type ProxyProviderType = "free" | "premium" | "rotating";
 export interface IProxyProvider {
   readonly providerType: ProxyProviderType;
   getProxies(): Promise<IProxy[]>;
-  refreshProxies(): Promise<void>;
 }
 
 /**
@@ -30,9 +29,7 @@ export interface IProxyProvider {
  */
 export interface IProxyService {
   getNextProxy(): Promise<IProxy>;
-  markProxyFailed(proxy: IProxy): Promise<void>;
   getAvailableProxies(): Promise<IProxy[]>;
-  refreshProxies(): Promise<void>;
 }
 
 /**

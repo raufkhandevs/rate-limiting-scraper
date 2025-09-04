@@ -29,10 +29,9 @@ export class HttpClientService {
     const startTime = Date.now();
 
     try {
-      // Validate URL
       this.validateUrl(url);
 
-      // Try HTTP first, then HTTPS fallback
+      // protocol strategy
       const protocols = this.getProtocolsToTry(proxy.protocol);
 
       for (const protocol of protocols) {
@@ -111,7 +110,7 @@ export class HttpClientService {
       url: url,
       timeout: options.timeout || this.config.scraping.proxyTimeout,
       maxRedirects: options.maxRedirects || DEFAULT_MAX_REDIRECTS,
-      validateStatus: (status: number) => status < 500, // Accept all status codes < 500
+      validateStatus: (status: number) => status < 500,
       headers: {
         "User-Agent": options.userAgent || DEFAULT_USER_AGENT,
         ...DEFAULT_HEADERS,
@@ -143,7 +142,6 @@ export class HttpClientService {
     } else if (proxyProtocol === "https") {
       return ["https", "http"];
     } else {
-      // Default to HTTP first
       return ["http", "https"];
     }
   }
@@ -182,6 +180,5 @@ export class HttpClientService {
   }
 }
 
-// Export singleton instance
 export const httpClientService = new HttpClientService();
 export default httpClientService;

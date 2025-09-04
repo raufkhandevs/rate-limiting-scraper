@@ -1,8 +1,4 @@
 /**
- * Custom error classes for better error handling
- */
-
-/**
  * Base error class with status code support
  */
 export class AppError extends Error {

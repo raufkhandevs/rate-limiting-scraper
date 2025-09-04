@@ -18,12 +18,10 @@ export class ScrapeService {
    * @returns Scrape response with HTML, headers, and metadata
    */
   async scrapeUrl(request: IScrapeRequest): Promise<IScrapeResponse> {
+    const { url } = request;
     const startTime = Date.now();
-    const {
-      url,
-      timeout = this.config.scraping.timeout,
-      requestsPerSecond = this.config.scraping.requestsPerSecond,
-    } = request;
+    const timeout = this.config.scraping.timeout;
+    const requestsPerSecond = this.config.scraping.requestsPerSecond;
 
     console.log(`Starting scrape for URL: ${url}`);
     console.log(
@@ -33,9 +31,10 @@ export class ScrapeService {
     let lastError: string = "";
 
     try {
-      // Try different proxies until timeout is reached
       let attempt = 1;
-      const MAX_ATTEMPTS = 100; // Safety limit to prevent infinite loops
+
+      // Safety limit to prevent infinite loops
+      const MAX_ATTEMPTS = this.config.scraping.maxAttempts;
 
       while (attempt <= MAX_ATTEMPTS) {
         const attemptStartTime = Date.now();
@@ -67,7 +66,6 @@ export class ScrapeService {
             console.log(
               `Proxy ${currentProxy.ip}:${currentProxy.port} is rate limited, trying next proxy`
             );
-            await proxyService.markProxyFailed(currentProxy);
             continue;
           }
 
@@ -82,7 +80,6 @@ export class ScrapeService {
             console.log(
               `Failed to increment rate limit for proxy ${currentProxy.ip}:${currentProxy.port}`
             );
-            await proxyService.markProxyFailed(currentProxy);
             continue;
           }
 
@@ -95,14 +92,14 @@ export class ScrapeService {
             }
           );
 
-          // Check if response is successful
+          // Check if successful
           if (
             response.status >= SUCCESS_STATUS_RANGE.min &&
             response.status <= SUCCESS_STATUS_RANGE.max
           ) {
             const totalTime = Date.now() - startTime;
             console.log(
-              `✅ Scrape successful on attempt ${attempt} in ${totalTime}ms`
+              `Scrape successful on attempt ${attempt} in ${totalTime}ms`
             );
 
             return {
@@ -111,40 +108,30 @@ export class ScrapeService {
               headers: response.headers,
             };
           } else {
-            // Non-successful status code
             const error = `HTTP ${response.status}: ${response.statusText}`;
-            console.log(`❌ Scrape failed on attempt ${attempt}: ${error}`);
+            console.log(`Scrape failed on attempt ${attempt}: ${error}`);
 
-            await proxyService.markProxyFailed(currentProxy);
             lastError = error;
-            continue; // Try next proxy
+            continue;
           }
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
-          console.log(
-            `❌ Scrape failed on attempt ${attempt}: ${errorMessage}`
-          );
-
-          // Mark proxy as failed if we have one
-          if (currentProxy && currentProxy.ip) {
-            await proxyService.markProxyFailed(currentProxy);
-          }
+          console.log(`Scrape failed on attempt ${attempt}: ${errorMessage}`);
 
           lastError = errorMessage;
           attempt++;
-          continue; // Try next proxy
+          continue;
         }
       }
 
-      // All attempts failed
       const totalTime = Date.now() - startTime;
       if (attempt > MAX_ATTEMPTS) {
         console.log(
-          `❌ Maximum attempts (${MAX_ATTEMPTS}) reached after ${totalTime}ms`
+          `Maximum attempts (${MAX_ATTEMPTS}) reached after ${totalTime}ms`
         );
       } else {
-        console.log(`❌ All attempts failed after ${totalTime}ms`);
+        console.log(`All attempts failed after ${totalTime}ms`);
       }
 
       return {
@@ -159,7 +146,7 @@ export class ScrapeService {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`❌ Scrape service error: ${errorMessage}`);
+      console.error(`Scrape service error: ${errorMessage}`);
 
       return {
         success: false,
@@ -171,6 +158,5 @@ export class ScrapeService {
   }
 }
 
-// Export singleton instance
 export const scrapeService = new ScrapeService();
 export default scrapeService;

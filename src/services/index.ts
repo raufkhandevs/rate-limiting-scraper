@@ -1,4 +1,3 @@
-export { getHealthStatus } from "./health.service";
 export { redisService } from "./redis.service";
 export { proxyService } from "./proxy.service";
 export { rateLimitService } from "./rate-limit.service";

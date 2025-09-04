@@ -9,17 +9,14 @@ export const responseWrapper = (
   res: Response,
   next: NextFunction
 ): void => {
-  // Store original json method
   const originalJson = res.json;
 
   // Override json method to wrap responses
   res.json = function (body: any) {
-    // If response already has our standard format, don't wrap it
     if (body && typeof body === "object" && body.hasOwnProperty("status")) {
       return originalJson.call(this, body);
     }
 
-    // Wrap the response in standard format
     const wrappedResponse = {
       status: "ok",
       data: body,

@@ -41,22 +41,6 @@ class RedisService {
   }
 
   /**
-   * Check if Redis is healthy
-   */
-  async isHealthy(): Promise<boolean> {
-    try {
-      if (!this.client || !this.client.isOpen) {
-        return false;
-      }
-      await this.client.ping();
-      return true;
-    } catch (error) {
-      console.error("Redis health check failed:", error);
-      return false;
-    }
-  }
-
-  /**
    * Get value by key
    */
   async get(key: string): Promise<string | null> {
@@ -69,11 +53,16 @@ class RedisService {
   /**
    * Set key-value pair
    */
-  async set(key: string, value: string): Promise<void> {
+  async set(key: string, value: string, expirySeconds?: number): Promise<void> {
     if (!this.client || !this.client.isOpen) {
       throw new Error("Redis client not connected");
     }
-    await this.client.set(key, value);
+
+    if (expirySeconds) {
+      await this.client.setEx(key, expirySeconds, value);
+    } else {
+      await this.client.set(key, value);
+    }
   }
 
   /**
@@ -88,5 +77,4 @@ class RedisService {
   }
 }
 
-// Export singleton instance
 export const redisService = new RedisService();

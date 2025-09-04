@@ -1,18 +1,14 @@
 import { Router } from "express";
 import { getAppConfig } from "../config";
-import healthRoutes from "./health.routes";
 import scrapeRoutes from "./scrape.routes";
 
 const router = Router();
 const config = getAppConfig();
 
-// Health routes
-router.use("/health", healthRoutes);
-
-// Scrape routes
+// Scrape
 router.use("/scrape", scrapeRoutes);
 
-// Root endpoint
+// Root
 router.get("/", (req, res) => {
   res.json({
     message: "Rate Limiting Scraper API",
@@ -20,7 +16,6 @@ router.get("/", (req, res) => {
     status: "running",
     environment: config.nodeEnv,
     endpoints: {
-      health: "GET /api/health",
       scrape: "POST /api/scrape",
     },
   });

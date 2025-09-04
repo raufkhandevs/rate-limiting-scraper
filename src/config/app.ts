@@ -17,6 +17,7 @@ export interface AppConfig {
     readonly timeout: number;
     readonly requestsPerSecond: number;
     readonly proxyTimeout: number;
+    readonly maxAttempts: number;
   };
 }
 
@@ -38,6 +39,7 @@ export const getAppConfig = (): AppConfig => {
       timeout: parseInt(process.env.SCRAPE_TIMEOUT_MS || "30000", 10),
       requestsPerSecond: parseInt(process.env.RATE_LIMIT_PER_SECOND || "1", 10),
       proxyTimeout: parseInt(process.env.PROXY_TIMEOUT_MS || "10000", 10),
+      maxAttempts: parseInt(process.env.MAX_ATTEMPTS || "100", 10),
     },
   };
 };

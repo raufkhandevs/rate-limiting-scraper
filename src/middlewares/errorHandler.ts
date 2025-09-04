@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { isDevelopment } from "../config";
-import { AppError } from "./custom-errors";
+import { AppError } from "../errors/custom-errors";
 
 /**
  * Global error handling middleware

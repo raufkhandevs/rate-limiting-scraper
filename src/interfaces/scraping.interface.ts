@@ -1,14 +1,8 @@
 /**
- * Scraping related interfaces
- */
-
-/**
  * Scrape request interface
  */
 export interface IScrapeRequest {
   url: string;
-  timeout?: number;
-  requestsPerSecond?: number;
 }
 
 /**
@@ -26,6 +20,4 @@ export interface IScrapeResponse {
  */
 export interface IScrapeRequestBody {
   url: string;
-  timeout?: number;
-  requestsPerSecond?: number;
 }
