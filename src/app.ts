@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import compression from "compression";
 import dotenv from "dotenv";
 import { getAppConfig } from "./config";
 import appRoutes from "./routes";
@@ -13,6 +14,8 @@ dotenv.config();
 const createApp = (): express.Application => {
   const app = express();
   const config = getAppConfig();
+
+  app.use(compression());
 
   app.use(
     cors({

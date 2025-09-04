@@ -45,13 +45,41 @@ npm run dev
 ### API Usage
 
 ```bash
-# Health check
-curl http://localhost:3000/api/health
-
-# Scrape URL
+# Scrape a URL
 curl -X POST http://localhost:3000/api/scrape \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com"}'
+  -d '{"url": "http://httpbin.org/html"}'
+```
+
+**Success Response (200):**
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "html": "<!DOCTYPE html>\n<html>\n  <head>\n  </head>\n  <body>\n      <h1>Herman Melville - Moby-Dick</h1>\n\n      <div>\n        <p>\n          Availing himself of the mild, summer-cool weather ... care-killing competency.\n        </p>\n      </div>\n  </body>\n</html>",
+    "headers": {
+      "date": "Thu, 04 Sep 2025 18:00:13 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "content-length": "3741",
+      "server": "gunicorn/19.9.0",
+      "access-control-allow-origin": "*"
+    }
+  },
+  "message": "Success",
+  "timestamp": "2025-09-04T18:00:13.632Z"
+}
+```
+
+**Error Response (500):**
+
+```json
+{
+  "status": "error",
+  "data": null,
+  "message": "All proxy attempts failed",
+  "timestamp": "2025-09-04T18:00:13.632Z"
+}
 ```
 
 ## Configuration
