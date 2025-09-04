@@ -17,6 +17,25 @@ services:
       - redis
     restart: unless-stopped
 
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: rate-limiting-scraper-test
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.test.json:/app/tsconfig.test.json
+      - ./jest.config.js:/app/jest.config.js
+      - ./.env:/app/.env
+    depends_on:
+      - redis
+    command: npm test
+
   redis:
     image: redis:7-alpine
     container_name: rate-limiting-scraper-redis-dev
